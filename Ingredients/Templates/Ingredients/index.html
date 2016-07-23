@@ -1,0 +1,10 @@
+<div id="Column1">
+    {% for ingredient in Ingredients %}
+    <input type="checkbox" name="ingredient" id="ingredient{{ forloop.counter }}" value="{{ ingredient.id }}" />
+</div>
+
+<div id="column2">
+<label> Ingredient </label><br />
+    <label>{{ingredient}}   {{ingredient.ingredient_price}}</label><br />
+{% endfor %}
+</div>
