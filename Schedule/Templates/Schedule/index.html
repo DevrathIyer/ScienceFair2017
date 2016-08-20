@@ -1,0 +1,85 @@
+<div id="map"></div>
+<!-- Replace the value of the key parameter with your own API key. -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFC47Cs-hm0P3_bRL-vDS1jPCw4Wv7OGU&callback=initMap" async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<style>
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+#map {
+  height: 50%;
+  width: 50%;
+}
+</style>
+<script>
+
+var map;
+
+var marker;
+
+var lineCoordinatesArray = [];
+
+function initMap()
+{
+  map = new google.maps.Map(document.getElementById('map'),
+  {
+    center: {lat: 33.27, lng: -111},
+    zoom: 8
+  });
+
+   marker = new google.maps.Marker({
+    position: {lat: 33.27, lng: -111},
+    map: map,
+    title: 'Start'
+  });
+
+ drawFoodTruck();
+
+
+}
+
+ function drawFoodTruck()
+ {
+
+ 	var location = getLocation();
+
+  map.setCenter({lat: location[0], lng : location[1]});
+
+  marker.setPosition({lat: location[0], lng : location[1]});
+
+  pushCoordToArray(location[0], location[1]);
+
+
+  var lineCoordinatesPath = new google.maps.Polyline({
+  path: lineCoordinatesArray,
+  geodesic: true,
+  strokeColor: '#2E10FF',
+  strokeOpacity: 1.0,
+  strokeWeight: 2
+  });
+
+  lineCoordinatesPath.setMap(map);
+
+  setTimeout(drawFoodTruck, 30000);
+
+ }
+
+ function getLocation()
+ {
+  var location;
+ 	var data= $.ajax({
+      url: 'http://gpsinsight.herokuapp.com/freshexpress',
+      async: false,
+      dataType: "json"
+   }).responseText;
+
+   var data1 = $.parseJSON(data);
+   return [data1.data[0].latitude,data1.data[0].longitude,data1.data[0].address];
+ }
+
+ function pushCoordToArray(latIn, lngIn) {
+      lineCoordinatesArray.push(new google.maps.LatLng(latIn, lngIn));
+  }
+ </script>
